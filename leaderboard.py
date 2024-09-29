@@ -151,12 +151,11 @@ if __name__ == "__main__":
         data = json.load(file)
     json_data = process_json.process(data)
 
-    st.subheader("All Candidates (3 Submissions Minimum)")
-
     if selected_option == "All-Time":
 
         chart, chart_data = visualisations(json_data)
         st.write(chart)
+        st.subheader("All Candidates (3 Submissions Minimum)")
         st.table(chart_data)
 
     else:
@@ -167,4 +166,5 @@ if __name__ == "__main__":
         cropped_data = sort_dates.crop_dates(json_data, cutoff_year)
         chart, chart_data = visualisations(cropped_data)
         st.write(chart)
+        st.subheader("All Candidates (3 Submissions Minimum)")
         st.table(chart_data)
