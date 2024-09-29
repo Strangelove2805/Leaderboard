@@ -24,7 +24,7 @@ STYLE_MODS = """
             """
 
 
-def draw_chart(chart_data: pd.DataFrame, limits: tuple):
+def draw_chart(chart_data: pd.DataFrame, limits: tuple) -> alt.Chart:
     """Draw an Altair bar chart with 315 degree x-axis labels, width of 650x400px
 
     Input Parameters:
@@ -36,6 +36,13 @@ def draw_chart(chart_data: pd.DataFrame, limits: tuple):
     limits          Type:   tuple
                     Use:    y-axis minimum and maximum values shown on the chart, 
                             respectively
+
+    Output Parameters:
+    -----------------
+
+    chart           Type:   alt.Chart
+                    Use:    Configuration for the bar chart, encoded with the desired
+                            columns from the input DataFrame
     """
     chart = alt.Chart(chart_data).mark_bar(clip=True).encode(
     x=alt.X("Candidate Name:N", sort="-y",
@@ -45,7 +52,7 @@ def draw_chart(chart_data: pd.DataFrame, limits: tuple):
     width=650,
     height=400)
 
-    st.write(chart)
+    return chart
 
 
 def set_limits(output_data: list) -> tuple:
@@ -105,7 +112,7 @@ def make_chart_data(output_data: list[str,int,list,list]) -> tuple[pd.DataFrame,
     return(chart_data, limits)
 
 
-def visualisations(processed_data):
+def visualisations(processed_data: list) -> tuple:
     """Builds the DataFrame and charts necessary for visualising
        the json data
 
@@ -116,11 +123,17 @@ def visualisations(processed_data):
                             [[Name, Total Score, [Scores], [Dates]],
                              [ '' ],
                              [ '' ]]
+
+    Output Parameters:
+    -----------------
+
+    (chart,data)    Type:   tuple
+                    Use:    Altair chart configuration and dataframe
     """
     chart_data, limits = make_chart_data(processed_data)
-    draw_chart(chart_data[:CHART_SIZE], limits)
-    st.subheader("All Candidates (3 Submissions Minimum)")
-    st.table(chart_data)
+    chart = draw_chart(chart_data[:CHART_SIZE], limits)
+
+    return (chart, chart_data)
 
 
 if __name__ == "__main__":
@@ -138,9 +151,13 @@ if __name__ == "__main__":
         data = json.load(file)
     json_data = process_json.process(data)
 
+    st.subheader("All Candidates (3 Submissions Minimum)")
+
     if selected_option == "All-Time":
 
-        visualisations(json_data)
+        chart, chart_data = visualisations(json_data)
+        st.write(chart)
+        st.table(chart_data)
 
     else:
 
@@ -148,4 +165,6 @@ if __name__ == "__main__":
         cutoff_year = CURRENT_YEAR - year_range
 
         cropped_data = sort_dates.crop_dates(json_data, cutoff_year)
-        visualisations(cropped_data)
+        chart, chart_data = visualisations(cropped_data)
+        st.write(chart)
+        st.table(chart_data)
