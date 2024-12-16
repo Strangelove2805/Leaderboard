@@ -1,6 +1,6 @@
 # Score Leaderboard Webapp
 
-App is currently deployed. ( http://http://54.195.11.111:8501 )
+App is currently deployed. ( http://54.195.11.111:8501 )
 
 ### Run in a virtual environment
 
