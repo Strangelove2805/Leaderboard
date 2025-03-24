@@ -1,6 +1,6 @@
 # Score Leaderboard Webapp
 
-App is currently deployed. ( http://54.195.11.111:8501 )
+App is currently deployed. ( https://leaderboardapp-strangelove2805.streamlit.app/ )
 
 ### Run in a virtual environment
 
